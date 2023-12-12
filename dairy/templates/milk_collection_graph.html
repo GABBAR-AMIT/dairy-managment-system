@@ -1,0 +1,71 @@
+<!-- your_app/templates/your_app/milk_collection_graph_chartjs.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk Collection Total Over Time</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="milkCollectionChart" width="400" height="300"></canvas>
+
+    <script>
+        var ctx = document.getElementById('milkCollectionChart').getContext('2d');
+        var chartDataJson = '{{ chart_data|safe }}';
+        var chartData = JSON.parse(chartDataJson);
+
+        var data = {
+            labels: chartData.map(entry => entry.date),
+            datasets: [{
+                label: 'Milk Collection Total',
+                data: chartData.map(entry => entry.total),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                pointRadius: 5,
+                pointHoverRadius: 8,
+                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                pointBorderColor: 'rgba(75, 192, 192, 1)',
+                pointHoverBackgroundColor: 'rgba(75, 192, 192, 1)',
+                pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
+            }]
+        };
+        var options = {
+            scales: {
+                x: [{
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        displayFormats: {
+                            day: 'MMM D, YYYY'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                }],
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Total'
+                    }
+                }
+            },
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        return 'Total: ' + tooltipItem.yLabel;
+                    }
+                }
+            }
+        };
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: options
+        });
+    </script>
+</body>
+</html>

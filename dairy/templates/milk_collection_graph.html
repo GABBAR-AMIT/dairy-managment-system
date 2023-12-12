@@ -6,9 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Milk Collection Total Over Time</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
-    <canvas id="milkCollectionChart" width="400" height="300"></canvas>
+    <div style="max-width: 600px; margin: auto;">
+        <h1 style="text-align: center; color: #333;">Milk Collection Total Over Time</h1>
+        <canvas id="milkCollectionChart" width="400" height="300"></canvas>
+    </div>
 
     <script>
         var ctx = document.getElementById('milkCollectionChart').getContext('2d');
@@ -22,7 +42,7 @@
                 data: chartData.map(entry => entry.total),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
+                borderWidth: 2,
                 pointRadius: 5,
                 pointHoverRadius: 8,
                 pointBackgroundColor: 'rgba(75, 192, 192, 1)',
@@ -44,6 +64,9 @@
                     title: {
                         display: true,
                         text: 'Date'
+                    },
+                    ticks: {
+                        maxTicksLimit: 7 // Show a maximum of 7 ticks on the x-axis for better readability
                     }
                 }],
                 y: {

@@ -6,6 +6,10 @@ import json
 from datetime import date
 from .forms import MilkCollectionForm
 
+
+def home(request):
+    return render(request, 'index.html')
+
 def milk_collection_graph(request):
     data = MilkCollection.objects.values_list('date', 'total')
 

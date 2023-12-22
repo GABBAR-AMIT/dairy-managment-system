@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk Sale Graph</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #chart-container {
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+        }
+
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .add-data-button, .home-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .add-data-button {
+            background-color: #4CAF50;
+        }
+
+        .add-data-button:hover {
+            background-color: #45a049;
+        }
+
+        .home-button {
+            background-color: #007bff;
+        }
+
+        .home-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart-container">
+        <h1 style="color: #333;">Milk Sale Graph</h1>
+        <canvas id="myChart" width="400" height="300"></canvas>
+        <a href="{% url 'create_milk_sale' %}" class="add-data-button">Add Milk Sale Data</a>
+        <a href="{% url 'home' %}" class="home-button">Home</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chartDataJson = '{{ chart_data|safe }}';
+            var chartData = JSON.parse(chartDataJson);
+
+            var data = {
+                labels: chartData.map(entry => entry.date),
+                datasets: [{
+                    label: 'Total Milk Sale',
+                    data: chartData.map(entry => entry.total),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                    pointBorderColor: 'rgba(75, 192, 192, 1)',
+                    pointHoverBackgroundColor: 'rgba(75, 192, 192, 1)',
+                    pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
+                }]
+            };
+
+            var options = {
+                scales: {
+                    x: [{
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                            displayFormats: {
+                                day: 'MMM D, YYYY'
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        },
+                        ticks: {
+                            maxTicksLimit: 7
+                        }
+                    }],
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Total'
+                        }
+                    }
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            return 'Total: ' + tooltipItem.yLabel;
+                        }
+                    }
+                }
+            };
+
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: options
+            });
+        });
+    </script>
+</body>
+</html>

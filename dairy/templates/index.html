@@ -39,6 +39,11 @@
         #energyChart {
             border-radius: 10px;
         }
+
+        /* Added styles for the milk graphs */
+        .milk-graph-container {
+            margin-top: 20px;
+        }
     </style>
     <!-- Add additional styles or libraries as needed -->
 </head>
@@ -71,12 +76,30 @@
                 </div>
             </div>
         </div>
-        <div class="container mt-5">
-            <h3 class="mb-4">🥛 Milk Collection Graph</h1>
-        
-            <!-- Your content and milk collection graph here -->
-        
-            <a href="milk-collection-graph" class="btn btn-primary">Go back to Energy Dashboard</a>
+    </div>
+
+    <!-- Milk Collection Graph -->
+    <div class="row milk-graph-container">
+        <div class="col-md-6">
+            <div class="container">
+                <h3 class="mb-4">🥛 Milk Collection Graph</h3>
+                <!-- Your content and milk collection graph here -->
+                <a href="{% url 'milk_collection_graph' %}" class="btn btn-primary">Go to Milk Collection Dashboard</a>
+            </div>
+        </div>
+
+        <!-- Milk Sale Graph (moved to the right) -->
+        <div class="col-md-6">
+            <div class="container">
+                <h3 class="mb-4">🥛 Milk Sale Graph</h3>
+                <!-- Your content and milk sale graph here -->
+                <a href="{% url 'milk_sale_graph' %}" class="btn btn-primary">Go to Milk Sale Dashboard</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="container">
+                <a href="{% url 'logout' %}?next={% url 'login' %}" class="btn btn-danger logout-btn">Logout</a>
+            </div>
         </div>
     </div>
 </div>

@@ -1,3 +1,5 @@
+<!-- your_app/templates/your_app/milk_collection_graph_chartjs.html -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -20,7 +22,6 @@
             border: 1px solid #ddd;
             border-radius: 8px;
         }
-
         .add-data-button {
             display: block;
             margin: 20px auto;
@@ -36,22 +37,6 @@
         .add-data-button:hover {
             background-color: #45a049;
         }
-
-        .home-button {
-            display: block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 16px;
-            text-align: center;
-        }
-
-        .home-button:hover {
-            background-color: #0056b3;
-        }
     </style>
 </head>
 <body>
@@ -59,7 +44,7 @@
         <h1 style="text-align: center; color: #333;">Milk Collection Total Over Time</h1>
         <canvas id="milkCollectionChart" width="400" height="300"></canvas>
         <a href="{% url 'add_milk_collection' %}" class="add-data-button">Add Milk Collection Data</a>
-        <a href="{% url 'home' %}" class="home-button">Home</a>
+        <a href="{% url 'home' %}" class="add-data-button">Home</a>
     </div>
 
     <script>

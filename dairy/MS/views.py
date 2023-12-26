@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
+from django.http import HttpResponse
 from django.core.serializers.json import DjangoJSONEncoder
 from .models import MilkSale, MilkCollection
 from .forms import MilkSaleForm, MilkCollectionForm, LoginForm
+import openpyxl
+from openpyxl.utils import get_column_letter
+from decimal import Decimal
 
 import json
 from datetime import date
@@ -27,6 +31,14 @@ def logout_view(request):
     logout(request)
     return redirect('login')  # Redirect to the home page after logout
 
+
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        return super(DecimalEncoder, self).default(obj)
+
 def milk_collection_graph(request):
     # Check if the user is authenticated
     if not request.user.is_authenticated:
@@ -37,10 +49,33 @@ def milk_collection_graph(request):
     # Convert date objects to string representations
     chart_data = [{'date': entry[0].strftime('%Y-%m-%d'), 'total': entry[1]} for entry in data]
 
-    # Convert the data to JSON
-    chart_data_json = json.dumps(chart_data, cls=DjangoJSONEncoder)
+    # Check if the request wants to download the Excel file
+    if 'excel' in request.GET.get('format', ''):
+        # Generate Excel file
+        workbook = openpyxl.Workbook()
+        worksheet = workbook.active
 
-    return render(request, 'milk_collection_graph.html', {'chart_data': chart_data_json})
+        # Write header row
+        worksheet.append(['Date', 'Total'])
+
+        # Write data rows
+        for entry in data:
+            worksheet.append([entry[0], entry[1]])
+
+        # Set column width for the 'Date' column
+        worksheet.column_dimensions[get_column_letter(1)].width = 15  # Adjust the width as needed
+
+        # Create a response with Excel file content type
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=milk_collection_data.xlsx'
+
+        # Save workbook to response
+        workbook.save(response)
+
+        return response
+    else:
+        chart_data_json = json.dumps(chart_data, cls=DecimalEncoder)
+        return render(request, 'milk_collection_graph.html', {'chart_data': chart_data_json})
 
 def add_milk_collection(request):
     # Check if the user is authenticated
